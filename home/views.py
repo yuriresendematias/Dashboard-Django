@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.http import JsonResponse
-from django.db.models import Sum
+from django.db.models import Sum, Max
 from datetime import datetime
 from .models import Vendas, Produto, Vendedor
 
@@ -9,13 +9,30 @@ from .models import Vendas, Produto, Vendedor
 def index(request):
     return render(request, 'index.html')
 
-
+#retorna o total vendido
 def get_total_sold(request):
     vendas = Vendas.objects.all()
     total  = vendas.aggregate(Sum('total'))['total__sum']
     if request.method == "GET":
         return JsonResponse({'total':total})
-    
+
+#retorna o total vendido no mês atual
+def get_current_billing(request):
+    vendas = Vendas.objects.filter(data__month=datetime.now().month)
+    total  = vendas.aggregate(Sum('total'))['total__sum']
+
+    if request.method == "GET":
+        return JsonResponse({'total':total})
+
+#retorna a maior venda do mês
+def get_biggest_sale(request):
+    vendas  = Vendas.objects.filter(data__month=datetime.now().month)
+    biggest = vendas.aggregate(Max('total'))['total__max']
+
+    if request.method == "GET":
+        return JsonResponse({'total':biggest})
+
+
 def billing_report(request):
     x = Vendas.objects.all()
     
