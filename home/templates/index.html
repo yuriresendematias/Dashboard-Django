@@ -4,6 +4,7 @@
 {% block 'title' %}Dashboard{% endblock %}
 
 {% block 'head' %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="{% static 'css\css.css' %}">
 {% endblock %}
 
@@ -91,6 +92,12 @@
         render_total_sold("{% url 'get_total_sold' %}")
         render_current_billing("{% url 'get_current_billing' %}")
         render_biggest_sale("{% url 'get_biggest_sale' %}")
+
+        //Gráficos
+        renderiza_faturamento_mensal('{% url "billing_report" %}')
+        renderiza_despesas_mensal()
+        renderiza_produtos_mais_vendidos('{% url "product_report" %}')
+        renderiza_funcionario_mes('{% url "employees_report" %}')
     }
 
 
